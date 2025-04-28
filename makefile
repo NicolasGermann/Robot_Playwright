@@ -1,4 +1,4 @@
-FILES := $(wildcard testcases/*.robot)
+FILES := testcases/
 MAKEFILE_DIR := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
 CONTAINER_PROVIDER := podman
 
