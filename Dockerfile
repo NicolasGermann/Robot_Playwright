@@ -14,6 +14,7 @@ RUN mkdir /workspace
 
 RUN pip install robotframework --break-system-packages
 RUN pip install robotframework-browser --break-system-packages
+RUN pip install langdetect --break-system-packages
 RUN rfbrowser init
 RUN npx playwright install-deps
 
