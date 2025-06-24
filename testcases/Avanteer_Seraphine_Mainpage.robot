@@ -1,5 +1,6 @@
 *** Variables ***
-${PAGE}   https://jangerlp.github.io/PIM-SWKS_Internationalisierung/
+${PAGE-DE}   https://swks.htwsaar-projects.de/de-DE/
+${PAGE-EN}   https://swks.htwsaar-projects.de/en-US/
 
 *** Settings ***
 Library    Browser
@@ -7,38 +8,55 @@ Library    String
 Resource  ../Resources/LanguageDetections.resource
 
 *** Test Cases ***
-Verify Seraphine Slogan Text
+Verify Seraphine Slogan Text German
     [Documentation]   Ist der Slogan auf Deutsch? 
-    New Page    ${PAGE}
+    New Page    ${PAGE-DE}
+    Set Browser Timeout   30s
     Wait For Load State    networkidle
-    Wait For Elements State    .mb-10.p-15 > p:nth-of-type(1)    visible    timeout=10s
-    Is Selected Text German  .mb-10.p-15 > p:nth-of-type(1)
+    Wait For Elements State    id=card-marketing    visible    timeout=30s
+    Is Selected Text German  id=card-marketing
 
-Verify Seraphine Advertisement Text
+Verify Seraphine Advertisement Text German
     [Documentation]   Ist der Text auf Deutsch? 
-    New Page    ${PAGE}
+    New Page    ${PAGE-DE}
+    Set Browser Timeout   30s
     Wait For Load State    networkidle
-    Wait For Elements State    .flex.flex-row.gap-4.my-20 > p    visible    timeout=10s
-    Is Selected Text German    .flex.flex-row.gap-4.my-20 > p
+    Wait For Elements State    id=marketing-text    visible    timeout=30s
+    Is Selected Text German    id=marketing-text
     
+Verify Seraphine Advertisement Text English
+    [Documentation]   Ist der Text auf Englisch? 
+    New Page    ${PAGE-EN}
+    Set Browser Timeout   30s
+    Wait For Load State    networkidle
+    Wait For Elements State    id=marketing-text    visible    timeout=30s
+    Is Selected Text English    id=marketing-text
 
 Test Main Page For Germany
-    Regexp Check On Text Selector  div.flex.flex-row.justify-between.items-center > p.text-lg  .*[€]
-    Regexp Check On Text Selector  div.flex.flex-col:nth-of-type(2) > span:nth-child(2)  .*ps.*
-    Regexp Check On Text Selector  div.flex.flex-col:nth-of-type(3) > span:nth-child(2)  .*Nm.*
-    Regexp Check On Text Selector  div.flex.flex-col:nth-of-type(5) > span:nth-child(2)  .*km/h.*
-    Regexp Check On Text Selector  div.flex.flex-col.gap-8.mb-20 > div:nth-of-type(2) > div > div:nth-of-type(1) > span:nth-of-type(2)  .*Liter / 100 km.*
-    Regexp Check On Text Selector  div.flex.flex-col.gap-8.mb-20 > div:nth-of-type(2) > div > div:nth-of-type(2) > span:nth-of-type(2)  .*g/km.*
-    Regexp Check On Text Selector  div.flex.flex-col.gap-8.mb-20 > div:nth-of-type(2) > div > div:nth-of-type(3) > span:nth-of-type(2)  .*l
-    Regexp Check On Text Selector  div.flex.flex-col.gap-8.mb-20 > div:nth-of-type(2) > div > div:nth-of-type(4) > span:nth-of-type(2)  .*km
-    Regexp Check On Attribute Selector  div.relative > img  src  .*enUS.*
-    Regexp Check On Attribute Selector  div.flex.flex-row.gap-4.my-20 > img  src  .*enUS.*
+    Regexp Check On Text Selector  ${PAGE-DE}  id=price  .*[€]
+    Regexp Check On Text Selector  ${PAGE-DE}  id=power  .*ps.*
+    Regexp Check On Text Selector  ${PAGE-DE}  id=torque  .*Nm.*
+    Regexp Check On Text Selector  ${PAGE-DE}  id=acceleration  .*km/h.*
+    Regexp Check On Text Selector  ${PAGE-DE}  id=efficiency  .*Liter / 100 km.*
+    Regexp Check On Text Selector  ${PAGE-DE}  id=volume  .*l
+    Regexp Check On Text Selector  ${PAGE-DE}  id=range  .*km
+    Regexp Check On Attribute Selector  ${PAGE-DE}  id=marketing-image  src  .*enUS.*
+
+Test Main Page For US
+    Regexp Check On Text Selector  ${PAGE-EN}  id=price  [€].*
+    Regexp Check On Text Selector  ${PAGE-EN}  id=power  .*hp.*
+    Regexp Check On Text Selector  ${PAGE-EN}  id=torque  .*lb-ft.*
+    Regexp Check On Text Selector  ${PAGE-EN}  id=acceleration  .*mph.*
+    Regexp Check On Text Selector  ${PAGE-EN}  id=efficiency  .*mpg.*
+    Regexp Check On Text Selector  ${PAGE-EN}  id=volume  .*gallons
+    Regexp Check On Text Selector  ${PAGE-EN}  id=range  .*miles
+    Regexp Check On Attribute Selector  ${PAGE-EN}  id=marketing-image  src  .*enUS.*
 
 *** Keywords ***
-Regexp Check On Attribute Selector
+Regexp Check On Attribute Selector 
     [Documentation]   Wird die richtige Einheit verwendet?
-    [Arguments]  ${selector}  ${element_type}  ${regex}
-    New Page    ${PAGE}
+    [Arguments]  ${page}  ${selector}  ${element_type}  ${regex}
+    New Page    ${page}
     Wait For Load State    networkidle
     Set Browser Timeout   30s
     Set Strict Mode  False
@@ -47,8 +65,8 @@ Regexp Check On Attribute Selector
 
 Regexp Check On Text Selector
     [Documentation]   Wird die richtige Einheit verwendet?
-    [Arguments]  ${selector}  ${regex}
-    New Page    ${PAGE}
+    [Arguments]  ${page}  ${selector}  ${regex}
+    New Page    ${page}
     Wait For Load State    networkidle
     Set Browser Timeout   30s
     Set Strict Mode  False
